@@ -71,7 +71,7 @@ j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefo
   }
   .carousel-fade{
     position:absolute; inset:0;
-    background:linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(11,12,15,0.9) 100%);
+    background:linear-gradient(180deg, rgba(0,0,0,0) 70%, rgba(11,12,15,0.55) 100%);
     pointer-events:none;
   }
   .carousel-dots{
@@ -80,23 +80,6 @@ j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefo
   }
   .dot{width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,0.35); transition:.25s;}
   .dot.active{background:var(--accent); width:18px; border-radius:4px;}
-  .car-header{
-    position:absolute; left:20px; bottom:16px; right:118px;
-  }
-  .car-year{
-    font-family:'JetBrains Mono',monospace;
-    font-size:12px; font-weight:600; letter-spacing:.08em;
-    color:var(--accent); text-transform:uppercase;
-    margin-bottom:2px;
-  }
-  .car-name{
-    font-family:'Barlow Condensed',sans-serif;
-    font-weight:800; font-size:29px; line-height:1;
-    letter-spacing:-.01em;
-  }
-  .car-trim{
-    font-size:13px; color:var(--text-secondary); margin-top:4px;
-  }
   .carousel-nav{
     position:absolute; top:50%; transform:translateY(-50%);
     width:32px; height:32px; border-radius:50%;
@@ -107,30 +90,44 @@ j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefo
   .carousel-nav.prev{left:12px;}
   .carousel-nav.next{right:12px;}
 
-  /* ===== PRICE TAG ===== */
-  .price-tag{
-    position:absolute; right:16px; bottom:44px;
+  /* ===== INFO HEADER (abaixo da foto) ===== */
+  .info-header{
+    background:var(--surface);
+    padding:18px 20px;
+    border-bottom:0.5px solid var(--line);
+  }
+  .info-header-top{
+    display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+  }
+  .car-year{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px; font-weight:600; letter-spacing:.08em;
+    color:var(--accent); text-transform:uppercase;
+    margin-bottom:4px;
+  }
+  .car-name{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:800; font-size:30px; line-height:1;
+    letter-spacing:-.01em;
+  }
+  .car-trim{
+    font-size:13px; color:var(--text-secondary); margin-top:5px;
+  }
+  .price-block{
+    text-align:right; flex-shrink:0;
     background:var(--accent);
     color:var(--accent-text);
     padding:10px 16px 8px;
-    border-radius:6px;
-    transform:rotate(-4deg);
-    box-shadow:0 6px 18px rgba(0,0,0,0.35);
-    z-index:2;
-  }
-  .price-tag::before{
-    content:"";
-    position:absolute; top:-5px; left:50%; transform:translateX(-50%);
-    width:8px; height:8px; border-radius:50%;
-    background:var(--bg); border:2px solid var(--accent-dark);
+    border-radius:8px;
   }
   .price-label{
     font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
-    opacity:.75; line-height:1;
+    opacity:.8; line-height:1;
   }
   .price-value{
     font-family:'Barlow Condensed',sans-serif;
     font-weight:800; font-size:23px; line-height:1.15;
+    white-space:nowrap;
   }
 
   /* ===== STORE STRIP ===== */
@@ -312,10 +309,10 @@ j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefo
 
   /* ===== RESPONSIVO ===== */
   @media (max-width:380px){
-    .car-name{font-size:24px;}
-    .car-header{right:96px;}
-    .price-tag{right:12px; bottom:40px; padding:8px 12px 6px;}
-    .price-value{font-size:19px;}
+    .car-name{font-size:23px;}
+    .info-header{padding:14px 16px;}
+    .price-block{padding:8px 10px 6px;}
+    .price-value{font-size:18px;}
     .q-title{font-size:21px;}
     .result-title{font-size:22px;}
     .equip-grid{grid-template-columns:1fr;}
@@ -356,16 +353,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <button class="carousel-nav prev" onclick="moveSlide(-1)" aria-label="Foto anterior">‹</button>
     <button class="carousel-nav next" onclick="moveSlide(1)" aria-label="Próxima foto">›</button>
     <div class="carousel-dots" id="dots"></div>
+  </div>
 
-    <div class="car-header">
-      <div class="car-year">2007 · Manual</div>
-      <div class="car-name">Meriva Maxx 1.8</div>
-      <div class="car-trim">197.000 km · Único dono</div>
-    </div>
-
-    <div class="price-tag">
-      <div class="price-label">à vista</div>
-      <div class="price-value">R$ 27.900</div>
+  <div class="info-header">
+    <div class="info-header-top">
+      <div>
+        <div class="car-year">2007 · Manual</div>
+        <div class="car-name">Meriva Maxx 1.8</div>
+        <div class="car-trim">197.000 km · Único dono</div>
+      </div>
+      <div class="price-block">
+        <div class="price-label">à vista</div>
+        <div class="price-value">R$ 27.900</div>
+      </div>
     </div>
   </div>
 

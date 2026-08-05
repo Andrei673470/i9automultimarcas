@@ -220,6 +220,47 @@
     box-shadow:0 14px 34px rgba(37,211,102,.55);
   }
 
+  #lead-form{
+    text-align:left;
+    margin-bottom:6px;
+  }
+
+  .lead-input{
+    width:100%;
+    background:rgba(255,255,255,0.07);
+    border:1.5px solid rgba(255,255,255,0.28);
+    color:var(--text-light);
+    padding:14px 16px;
+    border-radius:12px;
+    font-size:.95rem;
+    margin-bottom:12px;
+    outline:none;
+    transition: border-color .2s ease;
+  }
+  .lead-input::placeholder{
+    color:rgba(244,244,248,.55);
+  }
+  .lead-input:focus{
+    border-color:var(--accent);
+  }
+
+  .lead-error{
+    color:#ffb3b3;
+    font-size:.85rem;
+    min-height:18px;
+    margin-bottom:10px;
+  }
+
+  #lead-submit-btn{
+    background: linear-gradient(90deg, #25D366, #1ebc59);
+    color:#06210f;
+    box-shadow:0 10px 30px rgba(37,211,102,.4);
+  }
+  #lead-submit-btn:hover{
+    transform: translateY(-3px) scale(1.02);
+    box-shadow:0 14px 34px rgba(37,211,102,.55);
+  }
+
   #no-offer-box{
     background:rgba(255,92,92,.12);
     border:1px solid rgba(255,92,92,.35);
@@ -410,6 +451,51 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
   }
 
+  function handleLeadSubmit(event){
+    event.preventDefault();
+
+    const emailInput = document.getElementById('lead-email');
+    const phoneInput = document.getElementById('lead-phone');
+    const errorBox = document.getElementById('lead-error');
+
+    const email = emailInput.value.trim();
+    const phone = phoneInput.value.trim();
+    const phoneDigits = phone.replace(/\D/g, '');
+
+    const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const phoneValido = phoneDigits.length >= 10;
+
+    if(!emailValido || !phoneValido){
+      errorBox.textContent = 'Preencha um e-mail e celular válidos para continuar.';
+      return false;
+    }
+
+    errorBox.textContent = '';
+
+    // Envia os dados do lead para o dataLayer (útil para CRM e para o Advanced Matching do Facebook)
+    dataLayer.push({
+      event: 'Lead',
+      quiz_score: score,
+      contact_email: email,
+      contact_phone: phoneDigits
+    });
+
+    const link = "https://wa.me/" + WHATSAPP_NUMERO + "?text=" + encodeURIComponent(WHATSAPP_MENSAGEM);
+    const whatsappBtn = document.getElementById('whatsapp-btn');
+    whatsappBtn.href = link;
+    whatsappBtn.onclick = function(){
+      dataLayer.push({ event: 'whatsapp_click', quiz_score: score });
+    };
+
+    dataLayer.push({ event: 'whatsapp_click', quiz_score: score });
+    window.open(link, '_blank');
+
+    document.getElementById('lead-form').style.display = 'none';
+    document.getElementById('whatsapp-wrap').style.display = 'block';
+
+    return false;
+  }
+
   function showResult(){
     document.querySelectorAll('.question-step').forEach(s => s.style.display = 'none');
 
@@ -424,18 +510,29 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     let html = "";
 
     if(qualified){
-      const link = "https://wa.me/" + WHATSAPP_NUMERO + "?text=" + encodeURIComponent(WHATSAPP_MENSAGEM);
       html = `
         <div class="result-icon">🎉</div>
         <div id="result-title">Você garantiu uma condição especial!</div>
         <div id="result-text">
           Com base nas suas respostas, você se encaixa em uma oferta exclusiva.
-          Fale agora com nosso time e finalize sua negociação com prioridade.
+          Preencha seus dados para liberar o contato direto com nosso time.
         </div>
-        <a href="${link}" target="_blank" rel="noopener" class="cta-btn" id="whatsapp-btn"
-           onclick="dataLayer.push({event:'whatsapp_click', quiz_score:${score}}); dataLayer.push({event:'Lead'});">
-          💬 Falar no WhatsApp agora
-        </a>
+
+        <form id="lead-form" onsubmit="return handleLeadSubmit(event)">
+          <input type="email" id="lead-email" class="lead-input" placeholder="Seu melhor e-mail" required>
+          <input type="tel" id="lead-phone" class="lead-input" placeholder="Seu celular com DDD" required>
+          <div id="lead-error" class="lead-error"></div>
+          <button type="submit" class="cta-btn" id="lead-submit-btn">💬 Falar no WhatsApp agora</button>
+        </form>
+
+        <div id="whatsapp-wrap" style="display:none;">
+          <p style="font-size:.85rem;color:rgba(244,244,248,.7);margin-bottom:10px;">
+            Se o WhatsApp não abriu automaticamente, clique abaixo:
+          </p>
+          <a href="#" target="_blank" rel="noopener" class="cta-btn" id="whatsapp-btn">
+            💬 Falar no WhatsApp agora
+          </a>
+        </div>
       `;
     } else {
       html = `
